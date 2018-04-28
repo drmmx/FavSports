@@ -35,7 +35,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onItemClick(v, viewHolder.getPosition());
+                listener.onItemClick(v, viewHolder.getAdapterPosition());
             }
         });
         return viewHolder;
@@ -58,7 +58,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         private TextView titleNews, textNews, textHowSport;
         private ImageView imageNews;
 
-        public NewsViewHolder(View itemView) {
+        private NewsViewHolder(View itemView) {
             super(itemView);
             Log.d(TAG1, "NewsViewHolder: NewsViewHolder");
 
@@ -68,7 +68,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
             imageNews = itemView.findViewById(R.id.listItemImage);
         }
 
-        public void setData(News news, int position) {
+        private void setData(News news, int position) {
             Log.d(TAG1, "setData");
             titleNews.setText(String.valueOf(news.getTitleNews()));
             textNews.setText(String.valueOf(news.getTextNews()));
