@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,11 +31,12 @@ public class NewsFragment extends Fragment {
 
     private static final String TAG = "MainActivity_";
 
-    private NewsRecyclerViewAdapter arrayAdapter;
+    private NewsRecyclerViewAdapter mArrayAdapter;
     private RecyclerView mRecyclerView;
     private List<News> mNewsList = new ArrayList<>();
 
-    private ProgressBar progressBar;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ProgressBar mProgressBar;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -42,13 +44,21 @@ public class NewsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_news, container, false);
 
         mRecyclerView = view.findViewById(R.id.recyclerViewMain);
-        progressBar = view.findViewById(R.id.mainPageProgressBar);
+        mProgressBar = view.findViewById(R.id.mainPageProgressBar);
+        mSwipeRefreshLayout = view.findViewById(R.id.swiperefresh);
 
-        progressBar.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
 
         new NewThread().execute();
 
-        arrayAdapter = new NewsRecyclerViewAdapter(mNewsList, new CustomItemClickListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //
+            }
+        });
+
+        mArrayAdapter = new NewsRecyclerViewAdapter(mNewsList, new CustomItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
                 String itemUrl = mNewsList.get(position).getUrlNews();
@@ -83,25 +93,30 @@ public class NewsFragment extends Fragment {
                     //parsing text
                     String titleValue = fetchedItem.select("h3").text();
                     String articleTextValue = fetchedItem.select("p").text();
+                    String howSportValue = fetchedItem.select(".category-sports").text();
+
+                    if (howSportValue.equals("soccer")) {
+                        howSportValue = "football";
+                    }
 
                     //add items to model
-                    mNewsList.add(new News(titleValue, articleTextValue, imageSrcValue, urlValue, "Football"));
-
+                    if (!howSportValue.isEmpty()) {
+                        mNewsList.add(new News(titleValue, articleTextValue, imageSrcValue, urlValue, howSportValue));
+                    } else {
+                        mNewsList.add(new News(titleValue, articleTextValue, imageSrcValue, urlValue, "sport"));
+                    }
                 }
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
             return null;
         }
 
         @Override
         protected void onPostExecute(String result) {
-            progressBar.setVisibility(View.GONE);
-            mRecyclerView.setAdapter(arrayAdapter);
+            mProgressBar.setVisibility(View.GONE);
+            mRecyclerView.setAdapter(mArrayAdapter);
         }
     }
-
 }

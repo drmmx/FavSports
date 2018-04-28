@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -56,7 +57,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
     public class NewsViewHolder extends RecyclerView.ViewHolder{
         private static final String TAG1 = "NewsViewHolder_";
         private TextView titleNews, textNews, textHowSport;
-        private ImageView imageNews;
+        private RoundedImageView imageNews;
 
         private NewsViewHolder(View itemView) {
             super(itemView);
