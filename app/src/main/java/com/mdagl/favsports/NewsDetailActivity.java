@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -41,6 +42,8 @@ public class NewsDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_detail);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         Intent intent = getIntent();
         newsLink = intent.getStringExtra(NEWS_LINK);
 
@@ -65,14 +68,14 @@ public class NewsDetailActivity extends AppCompatActivity {
             try {
                 Log.d(TAG, "onCreate: loading information");
                 document = Jsoup.connect(newsLink).get();
-                Elements fetchedItems = document.getElementsByAttributeValueMatching("class",
-                        "news-content");
+                Elements fetchedItems1 = document.getElementsByClass("news-text clearfix");
 
-                arTitle = fetchedItems.select("h1");
-                Elements arImage = document.select("img");
-                imageSrcValue = arImage.attr("src");
+                arTitle = document.select("h2");
+                Element arImage = fetchedItems1.select("img").first();
+                imageSrcValue = arImage.attr("abs:src");
 
-                arText = fetchedItems.select(".detail-text-holder");
+                Elements fetchedItems2 = document.getElementsByClass("ctx_content");
+                arText = fetchedItems2.select("p");
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -87,7 +90,7 @@ public class NewsDetailActivity extends AppCompatActivity {
 
             articleTitle.setText(arTitle.text());
             articleText.setText(arText.text());
-            Picasso.get().load("http://xsport.ua/" + imageSrcValue).placeholder(R.drawable.ic_launcher_background).into(articleImage);
+            Picasso.get().load(imageSrcValue).into(articleImage);
         }
     }
 }

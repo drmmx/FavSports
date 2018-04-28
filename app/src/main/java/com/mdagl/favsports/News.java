@@ -2,13 +2,14 @@ package com.mdagl.favsports;
 
 public class News {
 
-    private String titleNews, textNews, imageNews, urlNews;
+    private String titleNews, textNews, imageNews, urlNews, textHowSport;
 
-    public News(String titleNews, String textNews, String imageNews, String urlNews) {
+    public News(String titleNews, String textNews, String imageNews, String urlNews, String textHowSport) {
         this.titleNews = titleNews;
         this.textNews = textNews;
         this.imageNews = imageNews;
         this.urlNews = urlNews;
+        this.textHowSport = textHowSport;
     }
 
     public String getTitleNews() {
@@ -25,5 +26,9 @@ public class News {
 
     public String getUrlNews() {
         return urlNews;
+    }
+
+    public String getTextHowSport() {
+        return textHowSport;
     }
 }

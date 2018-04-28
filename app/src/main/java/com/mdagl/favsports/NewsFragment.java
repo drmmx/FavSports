@@ -5,12 +5,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import org.jsoup.Jsoup;
@@ -31,8 +30,8 @@ public class NewsFragment extends Fragment {
 
     private static final String TAG = "MainActivity_";
 
-    private NewsAdapter arrayAdapter;
-    private ListView listView;
+    private NewsRecyclerViewAdapter arrayAdapter;
+    private RecyclerView mRecyclerView;
     private List<News> mNewsList = new ArrayList<>();
 
     private ProgressBar progressBar;
@@ -42,25 +41,24 @@ public class NewsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news, container, false);
 
-        listView = view.findViewById(R.id.listViewMain);
+        mRecyclerView = view.findViewById(R.id.recyclerViewMain);
         progressBar = view.findViewById(R.id.mainPageProgressBar);
 
         progressBar.setVisibility(View.VISIBLE);
 
         new NewThread().execute();
 
-        arrayAdapter = new NewsAdapter(view.getContext(), mNewsList);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        arrayAdapter = new NewsRecyclerViewAdapter(mNewsList, new CustomItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+            public void onItemClick(View v, int position) {
                 String itemUrl = mNewsList.get(position).getUrlNews();
 
-                Intent intent = new Intent(view.getContext(), NewsDetailActivity.class);
-                intent.putExtra(NewsDetailActivity.NEWS_LINK, "http://xsport.ua" + itemUrl);
+                Intent intent = new Intent(v.getContext(), NewsDetailActivity.class);
+                intent.putExtra(NewsDetailActivity.NEWS_LINK, "https://www.breakingnews.ie" + itemUrl);
                 startActivity(intent);
             }
         });
+
         return  view;
     }
 
@@ -70,31 +68,26 @@ public class NewsFragment extends Fragment {
         protected String doInBackground(String... strings) {
             try {
                 Log.d(TAG, "doInBackground: parsing HTML");
-                Document document = Jsoup.connect("http://xsport.ua/news/").get();
-                Elements fetchedItems = document.getElementsByAttributeValueMatching("class",
-                        "small-news-item item");
+                Document document = Jsoup.connect("https://www.breakingnews.ie/sport/").get();
+                Elements fetchedItems = document.getElementsByAttributeValueMatching("class", "with-preview-pic");
 
                 for (Element fetchedItem : fetchedItems) {
                     //parsing pictures
                     Elements images = fetchedItem.select("img");
-                    String imageSrcValue = images.attr("src");
+                    String imageSrcValue = images.attr("abs:src");
 
                     //parsing urls
                     Elements urls = fetchedItem.select("a");
                     String urlValue = urls.attr("href");
 
+                    //parsing text
+                    String titleValue = fetchedItem.select("h3").text();
+                    String articleTextValue = fetchedItem.select("p").text();
+
                     //add items to model
-                    mNewsList.add(new News(fetchedItem.select(".news-header").text(),
-                            fetchedItem.select(".news-preview").text(), imageSrcValue, urlValue));
+                    mNewsList.add(new News(titleValue, articleTextValue, imageSrcValue, urlValue, "Football"));
 
                 }
-                //Using iterator Andrey`s code
-                /*Iterator<Element> iterator = contentText.iterator();
-                mNewsList.clear();
-                for (Element titleElement : contentTitle) {
-                    Element textElement = iterator.next();
-                    mNewsList.add(new News(titleElement.text(), textElement.text()));
-                }*/
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -107,7 +100,7 @@ public class NewsFragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             progressBar.setVisibility(View.GONE);
-            listView.setAdapter(arrayAdapter);
+            mRecyclerView.setAdapter(arrayAdapter);
         }
     }
 

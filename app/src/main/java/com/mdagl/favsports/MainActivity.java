@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
             LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View actionBarView = inflater.inflate(R.layout.custom_abb_bar_layout, null);
+            View actionBarView = inflater.inflate(R.layout.layout_custom_abb_bar, null);
             actionBar.setCustomView(actionBarView);
 
             CircleImageView imageView = findViewById(R.id.profileThumbImage);
