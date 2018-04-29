@@ -1,9 +1,12 @@
-package com.mdagl.favsports;
+package com.mdagl.favsports.utils;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.mdagl.favsports.NewsFragment;
+import com.mdagl.favsports.ScoresFragment;
 
 public class TabPagerAdapter extends FragmentPagerAdapter{
 

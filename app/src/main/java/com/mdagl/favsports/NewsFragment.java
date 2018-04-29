@@ -13,6 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.mdagl.favsports.model.News;
+import com.mdagl.favsports.utils.CustomItemClickListener;
+import com.mdagl.favsports.utils.NewsRecyclerViewAdapter;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -54,7 +58,9 @@ public class NewsFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //
+                mSwipeRefreshLayout.setRefreshing(true);
+                mRecyclerView.setAdapter(mArrayAdapter);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -69,7 +75,7 @@ public class NewsFragment extends Fragment {
             }
         });
 
-        return  view;
+        return view;
     }
 
     public class NewThread extends AsyncTask<String, Void, String> {
@@ -105,11 +111,14 @@ public class NewsFragment extends Fragment {
                     } else {
                         mNewsList.add(new News(titleValue, articleTextValue, imageSrcValue, urlValue, "sport"));
                     }
+
                 }
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+
             return null;
         }
 
@@ -119,4 +128,5 @@ public class NewsFragment extends Fragment {
             mRecyclerView.setAdapter(mArrayAdapter);
         }
     }
+
 }

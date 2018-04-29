@@ -1,4 +1,4 @@
-package com.mdagl.favsports;
+package com.mdagl.favsports.model;
 
 public class News {
 

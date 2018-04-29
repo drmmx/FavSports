@@ -1,4 +1,4 @@
-package com.mdagl.favsports;
+package com.mdagl.favsports.utils;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -6,10 +6,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.mdagl.favsports.model.News;
+import com.mdagl.favsports.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
